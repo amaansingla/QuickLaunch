@@ -1,0 +1,76 @@
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+
+function PublicPage() {
+  const { slug } = useParams();
+  const [product, setProduct] = useState(null);
+  const [error, setError] = useState(null);
+  const [email, setEmail] = useState('');
+  const [signedUp, setSignedUp] = useState(false);
+
+  useEffect(() => {
+    async function fetchProduct() {
+      try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/products/${slug}`);
+        if (!res.ok) throw new Error('Product not found');
+        const data = await res.json();
+        setProduct(data);
+      } catch (err) {
+        setError(err.message);
+      }
+    }
+    fetchProduct();
+  }, [slug]);
+
+  async function handleSignup(e) {
+    e.preventDefault();
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/products/${slug}/signups`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      if (!res.ok) throw new Error('Signup failed');
+      setSignedUp(true);
+    } catch (err) {
+      setError(err.message);
+    }
+  }
+
+  if (error) return <p>{error}</p>;
+  if (!product) return <p>Loading...</p>;
+
+  const bullets = [product.bullet_1, product.bullet_2, product.bullet_3].filter(Boolean);
+
+  return (
+    <div style={{ maxWidth: '500px', margin: '80px auto', textAlign: 'center' }}>
+      <h1>{product.name}</h1>
+      <p>{product.one_liner}</p>
+
+      {bullets.length > 0 && (
+        <ul style={{ listStyle: 'none', padding: 0 }}>
+          {bullets.map((b, i) => (
+            <li key={i}>{b}</li>
+          ))}
+        </ul>
+      )}
+
+      {signedUp ? (
+        <p>You're on the list!</p>
+      ) : (
+        <form onSubmit={handleSignup}>
+          <input
+            type="email"
+            required
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+          />
+          <button type="submit">Join waitlist</button>
+        </form>
+      )}
+    </div>
+  );
+}
+
+export default PublicPage;
