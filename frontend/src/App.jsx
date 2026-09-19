@@ -8,8 +8,12 @@ function App() {
     <Routes>
       <Route path="/" element={
         <div>
-          <h1>QuickLaunch</h1>
-          <ProductForm />
+          <header className="console-header">
+            <h1>QuickLaunch</h1>
+          </header>
+          <main className="console-main">
+            <ProductForm />
+          </main>
         </div>
       } />
       <Route path="/p/:slug" element={<PublicPage />} />

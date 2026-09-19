@@ -39,52 +39,47 @@ function ProductForm() {
   }
 
   return (
-    <div style={{ display: 'flex', gap: '32px', alignItems: 'flex-start' }}>
-      <div style={{ flex: 1 }}>
+    <div className="editor-layout">
+      <div className="editor-form-panel">
         <form onSubmit={handleSubmit}>
-          <div>
+          <div className="field">
             <label>Product name</label>
-            <br />
             <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. QuickLaunch" />
           </div>
 
-          <div>
+          <div className="field">
             <label>One-liner</label>
-            <br />
             <input type="text" value={oneLiner} onChange={(e) => setOneLiner(e.target.value)} placeholder="e.g. Launch a waitlist page in 5 minutes" />
           </div>
 
-          <div>
+          <div className="field">
             <label>Feature 1</label>
-            <br />
             <input type="text" value={bullet1} onChange={(e) => setBullet1(e.target.value)} />
           </div>
 
-          <div>
+          <div className="field">
             <label>Feature 2</label>
-            <br />
             <input type="text" value={bullet2} onChange={(e) => setBullet2(e.target.value)} />
           </div>
 
-          <div>
+          <div className="field">
             <label>Feature 3</label>
-            <br />
             <input type="text" value={bullet3} onChange={(e) => setBullet3(e.target.value)} />
           </div>
 
-          <button type="submit">Create page</button>
+          <button type="submit" className="btn-primary">Create page</button>
         </form>
 
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        {error && <p className="form-error">{error}</p>}
 
         {result && (
-          <p>
-            Page created! Your URL slug is: <strong>{result.slug}</strong>
+          <p className="form-success">
+            Page created! Your URL slug is: <strong className="mono">{result.slug}</strong>
           </p>
         )}
       </div>
 
-      <div style={{ flex: 1 }}>
+      <div className="editor-preview-panel">
         <PagePreview name={name} oneLiner={oneLiner} bullets={[bullet1, bullet2, bullet3]} />
       </div>
     </div>

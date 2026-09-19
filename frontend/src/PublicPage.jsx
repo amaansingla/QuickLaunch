@@ -43,32 +43,35 @@ function PublicPage() {
   const bullets = [product.bullet_1, product.bullet_2, product.bullet_3].filter(Boolean);
 
   return (
-    <div style={{ maxWidth: '500px', margin: '80px auto', textAlign: 'center' }}>
-      <h1>{product.name}</h1>
-      <p>{product.one_liner}</p>
+    <div className="public-page">
+      <div className="public-card">
+        <h1>{product.name}</h1>
+        <p className="public-oneliner">{product.one_liner}</p>
+        <hr className="public-divider" />
 
-      {bullets.length > 0 && (
-        <ul style={{ listStyle: 'none', padding: 0 }}>
-          {bullets.map((b, i) => (
-            <li key={i}>{b}</li>
-          ))}
-        </ul>
-      )}
+        {bullets.length > 0 && (
+          <ul className="public-bullets">
+            {bullets.map((b, i) => (
+              <li key={i}>{b}</li>
+            ))}
+          </ul>
+        )}
 
-      {signedUp ? (
-        <p>You're on the list!</p>
-      ) : (
-        <form onSubmit={handleSignup}>
-          <input
-            type="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="you@example.com"
-          />
-          <button type="submit">Join waitlist</button>
-        </form>
-      )}
+        {signedUp ? (
+          <p className="public-success">You're on the list!</p>
+        ) : (
+          <form className="public-signup" onSubmit={handleSignup}>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+            />
+            <button type="submit">Join waitlist</button>
+          </form>
+        )}
+      </div>
     </div>
   );
 }

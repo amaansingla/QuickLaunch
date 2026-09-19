@@ -24,30 +24,35 @@ function Dashboard() {
   if (!data) return <p>Loading...</p>;
 
   return (
-    <div style={{ maxWidth: '500px', margin: '40px auto' }}>
-      <h1>Dashboard for {slug}</h1>
-      <p>Total signups: {data.count}</p>
+    <div>
+      <header className="dashboard-header">
+        <h1>Dashboard for <span className="mono">{slug}</span></h1>
+      </header>
 
-      {data.count === 0 ? (
-        <p>No signups yet.</p>
-      ) : (
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr>
-              <th style={{ textAlign: 'left', borderBottom: '1px solid #ccc' }}>Email</th>
-              <th style={{ textAlign: 'left', borderBottom: '1px solid #ccc' }}>Signed up</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.signups.map((s, i) => (
-              <tr key={i}>
-                <td>{s.email}</td>
-                <td>{new Date(s.created_at).toLocaleString()}</td>
+      <main className="dashboard-main">
+        <p className="dashboard-count">Total signups: <strong>{data.count}</strong></p>
+
+        {data.count === 0 ? (
+          <p className="dashboard-empty">No signups yet.</p>
+        ) : (
+          <table className="dashboard-table">
+            <thead>
+              <tr>
+                <th>Email</th>
+                <th>Signed up</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+            </thead>
+            <tbody>
+              {data.signups.map((s, i) => (
+                <tr key={i}>
+                  <td className="mono">{s.email}</td>
+                  <td className="mono">{new Date(s.created_at).toLocaleString()}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </main>
     </div>
   );
 }

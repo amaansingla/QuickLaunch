@@ -2,21 +2,24 @@ function PagePreview({ name, oneLiner, bullets }) {
   const filledBullets = bullets.filter((b) => b.trim() !== '');
 
   return (
-    <div style={{ border: '1px solid #ccc', borderRadius: '8px', padding: '24px', minHeight: '300px' }}>
-      <h2>{name || 'Your product name'}</h2>
-      <p>{oneLiner || 'Your one-liner goes here'}</p>
+    <div className="preview-card">
+      <div className="preview-chrome">Preview</div>
+      <div className="preview-body">
+        <h2>{name || 'Your product name'}</h2>
+        <p className="preview-oneliner">{oneLiner || 'Your one-liner goes here'}</p>
 
-      {filledBullets.length > 0 && (
-        <ul>
-          {filledBullets.map((b, i) => (
-            <li key={i}>{b}</li>
-          ))}
-        </ul>
-      )}
+        {filledBullets.length > 0 && (
+          <ul className="preview-bullets">
+            {filledBullets.map((b, i) => (
+              <li key={i}>{b}</li>
+            ))}
+          </ul>
+        )}
 
-      <div style={{ marginTop: '24px' }}>
-        <input type="email" placeholder="you@example.com" disabled />
-        <button disabled>Join waitlist</button>
+        <div className="preview-signup">
+          <input type="email" placeholder="you@example.com" disabled />
+          <button disabled>Join waitlist</button>
+        </div>
       </div>
     </div>
   );
