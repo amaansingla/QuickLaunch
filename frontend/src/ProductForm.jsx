@@ -2,6 +2,10 @@ import { useState } from 'react';
 import PagePreview from './PagePreview';
 
 function ProductForm() {
+  const [idea, setIdea] = useState('');
+  const [generating, setGenerating] = useState(false);
+  const [generateError, setGenerateError] = useState(null);
+
   const [name, setName] = useState('');
   const [oneLiner, setOneLiner] = useState('');
   const [bullet1, setBullet1] = useState('');
@@ -9,6 +13,32 @@ function ProductForm() {
   const [bullet3, setBullet3] = useState('');
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
+
+  async function handleGenerate() {
+    if (!idea.trim()) return;
+    setGenerating(true);
+    setGenerateError(null);
+
+    try {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ idea }),
+      });
+      if (!res.ok) throw new Error('Failed to generate');
+      const data = await res.json();
+
+      setName(data.name || '');
+      setOneLiner(data.oneLiner || '');
+      setBullet1(data.bullets?.[0] || '');
+      setBullet2(data.bullets?.[1] || '');
+      setBullet3(data.bullets?.[2] || '');
+    } catch (err) {
+      setGenerateError(err.message);
+    } finally {
+      setGenerating(false);
+    }
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -41,6 +71,22 @@ function ProductForm() {
   return (
     <div className="editor-layout">
       <div className="editor-form-panel">
+        <div className="generate-box">
+          <label>Have an idea? Let AI fill in the rest</label>
+          <div className="generate-row">
+            <input
+              type="text"
+              value={idea}
+              onChange={(e) => setIdea(e.target.value)}
+              placeholder="e.g. an app for tracking gym progress"
+            />
+            <button type="button" className="btn-generate" onClick={handleGenerate} disabled={generating}>
+              {generating ? 'Generating...' : name ? 'Regenerate' : 'Generate'}
+            </button>
+          </div>
+          {generateError && <p className="generate-error">{generateError}</p>}
+        </div>
+
         <form onSubmit={handleSubmit}>
           <div className="field">
             <label>Product name</label>

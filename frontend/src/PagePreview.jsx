@@ -5,13 +5,13 @@ function PagePreview({ name, oneLiner, bullets }) {
     <div className="preview-card">
       <div className="preview-chrome">Preview</div>
       <div className="preview-body">
-        <h2>{name || 'Your product name'}</h2>
-        <p className="preview-oneliner">{oneLiner || 'Your one-liner goes here'}</p>
+        <h2 className="title-case">{name || 'Your product name'}</h2>
+        <p className="preview-oneliner title-case">{oneLiner || 'Your one-liner goes here'}</p>
 
         {filledBullets.length > 0 && (
           <ul className="preview-bullets">
             {filledBullets.map((b, i) => (
-              <li key={i}>{b}</li>
+              <li key={i} className="title-case">{b}</li>
             ))}
           </ul>
         )}

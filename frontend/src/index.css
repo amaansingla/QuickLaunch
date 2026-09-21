@@ -41,7 +41,7 @@ input, button {
 
 .console-header h1 {
   color: var(--paper);
-  font-size: 28px;
+  font-size: 45px;
 }
 
 .console-main {
@@ -311,4 +311,94 @@ input, button {
 
 .dashboard-empty {
   color: var(--ash);
+}
+
+.console-header {
+  text-align: center;
+}
+
+.console-header h1 {
+  display: inline-block;
+  border-bottom: 3px solid var(--gold);
+  padding-bottom: 10px;
+}
+
+.title-case {
+  text-transform: capitalize;
+}
+
+/* AI generate */
+.generate-box {
+  border: 1px dashed var(--line-light);
+  border-radius: 4px;
+  padding: 20px;
+  margin-bottom: 32px;
+}
+
+.generate-box label {
+  display: block;
+  font-size: 13px;
+  color: var(--ash);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.generate-row {
+  display: flex;
+  gap: 8px;
+}
+
+.generate-row input {
+  flex: 1;
+  padding: 10px 12px;
+  border: 1px solid var(--line-light);
+  border-radius: 3px;
+  outline: none;
+}
+
+.generate-row input:focus {
+  border-color: var(--gold);
+}
+
+.btn-generate {
+  background: var(--gold);
+  color: var(--ink);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 3px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.btn-generate:hover {
+  opacity: 0.85;
+}
+
+.btn-generate:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.generate-error {
+  color: #B3261E;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.hero {
+  text-align: center;
+  padding: 20px 24px 8px;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.hero h2 {
+  font-size: 22px;
+}
+
+.hero p {
+  color: var(--ash);
+  margin-top: 10px;
+  font-size: 16px;
 }

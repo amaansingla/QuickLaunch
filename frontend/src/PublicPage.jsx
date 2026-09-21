@@ -45,14 +45,14 @@ function PublicPage() {
   return (
     <div className="public-page">
       <div className="public-card">
-        <h1>{product.name}</h1>
-        <p className="public-oneliner">{product.one_liner}</p>
+        <h1 className="title-case">{product.name}</h1>
+        <p className="public-oneliner title-case">{product.one_liner}</p>
         <hr className="public-divider" />
 
         {bullets.length > 0 && (
           <ul className="public-bullets">
             {bullets.map((b, i) => (
-              <li key={i}>{b}</li>
+              <li key={i} className="title-case">{b}</li>
             ))}
           </ul>
         )}
