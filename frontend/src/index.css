@@ -44,6 +44,23 @@ input, button {
   font-size: 45px;
 }
 
+.site-header-subtitle {
+  color: var(--paper);
+  opacity: 0.7;
+  font-size: 15px;
+  margin-top: 4px;
+}
+
+.site-header-nav {
+  color: var(--paper);
+  font-size: 14px;
+  margin-top: 10px;
+}
+
+.site-header-nav a {
+  color: inherit;
+}
+
 .console-main {
   padding: 48px;
   max-width: 1100px;

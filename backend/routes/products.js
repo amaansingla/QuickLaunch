@@ -89,8 +89,8 @@ router.get("/:slug", async (req, res) => {
 // Capture an email signup
 router.post("/:slug/signups", async (req, res) => {
   try {
-    const { email } = req.body;
-    if (!email) return res.status(400).json({ error: "email is required" });
+    const { email, name } = req.body;
+    if (!email || !name) return res.status(400).json({ error: "name and email are required" });
 
     const { rows: productRows } = await pool.query(
       "SELECT id FROM products WHERE slug = $1",
@@ -101,9 +101,9 @@ router.post("/:slug/signups", async (req, res) => {
 
     const productId = productRows[0].id;
     await pool.query(
-      `INSERT INTO signups (product_id, email) VALUES ($1, $2)
+      `INSERT INTO signups (product_id, email, name) VALUES ($1, $2, $3)
        ON CONFLICT (product_id, email) DO NOTHING`,
-      [productId, email],
+      [productId, email, name],
     );
     res.status(201).json({ ok: true });
   } catch (err) {
@@ -124,7 +124,7 @@ router.get("/:slug/signups", async (req, res) => {
 
     const productId = productRows[0].id;
     const { rows } = await pool.query(
-      "SELECT email, created_at FROM signups WHERE product_id = $1 ORDER BY created_at DESC",
+      "SELECT name, email, created_at FROM signups WHERE product_id = $1 ORDER BY created_at DESC",
       [productId],
     );
     res.json({ count: rows.length, signups: rows });

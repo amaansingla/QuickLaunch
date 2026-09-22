@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import * as XLSX from "xlsx";
+import SiteHeader from "./SiteHeader";
 
 function Dashboard() {
   const { slug } = useParams();
@@ -22,7 +23,7 @@ function Dashboard() {
 
   function downloadExcel() {
     const ws = XLSX.utils.json_to_sheet(
-      data.signups.map((s) => ({ Email: s.email, "Signed up": new Date(s.created_at).toLocaleString() }))
+      data.signups.map((s) => ({ Name: s.name, Email: s.email, "Signed up": new Date(s.created_at).toLocaleString() }))
     );
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Signups");
@@ -34,9 +35,7 @@ function Dashboard() {
 
   return (
     <div>
-      <header className="dashboard-header">
-        <h1>Dashboard for <span className="mono">{slug}</span></h1>
-      </header>
+      <SiteHeader title={<>Signups for <span className="mono">{slug}</span></>} />
       <main className="dashboard-main">
         <p className="dashboard-count">Total signups: <strong>{data.count}</strong></p>
         {data.count > 0 && (
@@ -48,10 +47,11 @@ function Dashboard() {
           <p className="dashboard-empty">No signups yet.</p>
         ) : (
           <table className="dashboard-table">
-            <thead><tr><th>Email</th><th>Signed up</th></tr></thead>
+            <thead><tr><th>Name</th><th>Email</th><th>Signed up</th></tr></thead>
             <tbody>
               {data.signups.map((s, i) => (
                 <tr key={i}>
+                  <td className="mono">{s.name}</td>
                   <td className="mono">{s.email}</td>
                   <td className="mono">{new Date(s.created_at).toLocaleString()}</td>
                 </tr>

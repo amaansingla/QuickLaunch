@@ -1,0 +1,214 @@
+diff --git a/backend/optionalAuth.js b/backend/optionalAuth.jsx
+similarity index 100%
+rename from backend/optionalAuth.js
+rename to backend/optionalAuth.jsx
+diff --git a/backend/routes/products.js b/backend/routes/products.js
+index 2d33a9b..560144b 100644
+--- a/backend/routes/products.js
++++ b/backend/routes/products.js
+@@ -89,8 +89,8 @@ router.get("/:slug", async (req, res) => {
+ // Capture an email signup
+ router.post("/:slug/signups", async (req, res) => {
+   try {
+-    const { email } = req.body;
+-    if (!email) return res.status(400).json({ error: "email is required" });
++    const { email, name } = req.body;
++    if (!email || !name) return res.status(400).json({ error: "name and email are required" });
+ 
+     const { rows: productRows } = await pool.query(
+       "SELECT id FROM products WHERE slug = $1",
+@@ -101,9 +101,9 @@ router.post("/:slug/signups", async (req, res) => {
+ 
+     const productId = productRows[0].id;
+     await pool.query(
+-      `INSERT INTO signups (product_id, email) VALUES ($1, $2)
++      `INSERT INTO signups (product_id, email, name) VALUES ($1, $2, $3)
+        ON CONFLICT (product_id, email) DO NOTHING`,
+-      [productId, email],
++      [productId, email, name],
+     );
+     res.status(201).json({ ok: true });
+   } catch (err) {
+@@ -124,7 +124,7 @@ router.get("/:slug/signups", async (req, res) => {
+ 
+     const productId = productRows[0].id;
+     const { rows } = await pool.query(
+-      "SELECT email, created_at FROM signups WHERE product_id = $1 ORDER BY created_at DESC",
++      "SELECT name, email, created_at FROM signups WHERE product_id = $1 ORDER BY created_at DESC",
+       [productId],
+     );
+     res.json({ count: rows.length, signups: rows });
+diff --git a/backend/schema.sql b/backend/schema.sql
+index 5db3da7..4deb7ea 100644
+--- a/backend/schema.sql
++++ b/backend/schema.sql
+@@ -29,4 +29,6 @@ CREATE TABLE IF NOT EXISTS users (
+   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+ );
+ 
+-ALTER TABLE products ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES users(id);
+\ No newline at end of file
++ALTER TABLE products ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES users(id);
++
++ALTER TABLE signups ADD COLUMN IF NOT EXISTS name TEXT;
+\ No newline at end of file
+diff --git a/frontend/src/Dashboard.jsx b/frontend/src/Dashboard.jsx
+index e9389c9..7c2a253 100644
+--- a/frontend/src/Dashboard.jsx
++++ b/frontend/src/Dashboard.jsx
+@@ -1,6 +1,7 @@
+ import { useEffect, useState } from "react";
+ import { useParams } from "react-router-dom";
+ import * as XLSX from "xlsx";
++import SiteHeader from "./SiteHeader";
+ 
+ function Dashboard() {
+   const { slug } = useParams();
+@@ -22,7 +23,7 @@ function Dashboard() {
+ 
+   function downloadExcel() {
+     const ws = XLSX.utils.json_to_sheet(
+-      data.signups.map((s) => ({ Email: s.email, "Signed up": new Date(s.created_at).toLocaleString() }))
++      data.signups.map((s) => ({ Name: s.name, Email: s.email, "Signed up": new Date(s.created_at).toLocaleString() }))
+     );
+     const wb = XLSX.utils.book_new();
+     XLSX.utils.book_append_sheet(wb, ws, "Signups");
+@@ -34,9 +35,7 @@ function Dashboard() {
+ 
+   return (
+     <div>
+-      <header className="dashboard-header">
+-        <h1>Dashboard for <span className="mono">{slug}</span></h1>
+-      </header>
++      <SiteHeader title={<>Signups for <span className="mono">{slug}</span></>} />
+       <main className="dashboard-main">
+         <p className="dashboard-count">Total signups: <strong>{data.count}</strong></p>
+         {data.count > 0 && (
+@@ -48,10 +47,11 @@ function Dashboard() {
+           <p className="dashboard-empty">No signups yet.</p>
+         ) : (
+           <table className="dashboard-table">
+-            <thead><tr><th>Email</th><th>Signed up</th></tr></thead>
++            <thead><tr><th>Name</th><th>Email</th><th>Signed up</th></tr></thead>
+             <tbody>
+               {data.signups.map((s, i) => (
+                 <tr key={i}>
++                  <td className="mono">{s.name}</td>
+                   <td className="mono">{s.email}</td>
+                   <td className="mono">{new Date(s.created_at).toLocaleString()}</td>
+                 </tr>
+diff --git a/frontend/src/MyProducts.jsx b/frontend/src/MyProducts.jsx
+index 908b0f4..0938ae1 100644
+--- a/frontend/src/MyProducts.jsx
++++ b/frontend/src/MyProducts.jsx
+@@ -1,6 +1,7 @@
+ import { useEffect, useState } from "react";
+ import { useAuth } from "./AuthContext";
+ import { useNavigate } from "react-router-dom";
++import SiteHeader from "./SiteHeader";
+ 
+ function MyProducts() {
+   const { token, user, logout } = useAuth();
+@@ -63,7 +64,7 @@ function MyProducts() {
+ 
+   return (
+     <div>
+-      <header className="dashboard-header"><h1>My Products</h1></header>
++      <SiteHeader title="My Products" />
+       <main className="dashboard-main">
+         <p className="dashboard-count">
+           Logged in as <span className="mono">{user?.email}</span> —{" "}
+diff --git a/frontend/src/PublicPage.jsx b/frontend/src/PublicPage.jsx
+index 47a4cf8..5f5ef6a 100644
+--- a/frontend/src/PublicPage.jsx
++++ b/frontend/src/PublicPage.jsx
+@@ -5,6 +5,7 @@ function PublicPage() {
+   const { slug } = useParams();
+   const [product, setProduct] = useState(null);
+   const [error, setError] = useState(null);
++  const [name, setName] = useState('');
+   const [email, setEmail] = useState('');
+   const [signedUp, setSignedUp] = useState(false);
+ 
+@@ -28,7 +29,7 @@ function PublicPage() {
+       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/products/${slug}/signups`, {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json' },
+-        body: JSON.stringify({ email }),
++        body: JSON.stringify({ name, email }),
+       });
+       if (!res.ok) throw new Error('Signup failed');
+       setSignedUp(true);
+@@ -61,6 +62,13 @@ function PublicPage() {
+           <p className="public-success">You're on the list!</p>
+         ) : (
+           <form className="public-signup" onSubmit={handleSignup}>
++            <input
++              type="text"
++              required
++              value={name}
++              onChange={(e) => setName(e.target.value)}
++              placeholder="Your name"
++            />
+             <input
+               type="email"
+               required
+diff --git a/frontend/src/SiteHeader.jsx b/frontend/src/SiteHeader.jsx
+new file mode 100644
+index 0000000..c90aefe
+--- /dev/null
++++ b/frontend/src/SiteHeader.jsx
+@@ -0,0 +1,25 @@
++import { useAuth } from "./AuthContext";
++
++function SiteHeader({ title }) {
++  const { token } = useAuth();
++
++  return (
++    <header className="console-header">
++      <h1>
++        <a href="/" style={{ color: "inherit", textDecoration: "none" }}>QuickLaunch</a>
++      </h1>
++      {title ? <p className="site-header-subtitle">{title}</p> : null}
++      <nav className="site-header-nav">
++        <a href="/" style={{ color: "inherit" }}>Home</a>
++        {" · "}
++        {token ? (
++          <a href="/dashboard" style={{ color: "inherit" }}>My Products</a>
++        ) : (
++          <a href="/login" style={{ color: "inherit" }}>Log in</a>
++        )}
++      </nav>
++    </header>
++  );
++}
++
++export default SiteHeader;
+diff --git a/frontend/src/index.css b/frontend/src/index.css
+index 9e2c8e3..d7858e8 100644
+--- a/frontend/src/index.css
++++ b/frontend/src/index.css
+@@ -44,6 +44,23 @@ input, button {
+   font-size: 45px;
+ }
+ 
++.site-header-subtitle {
++  color: var(--paper);
++  opacity: 0.7;
++  font-size: 15px;
++  margin-top: 4px;
++}
++
++.site-header-nav {
++  color: var(--paper);
++  font-size: 14px;
++  margin-top: 10px;
++}
++
++.site-header-nav a {
++  color: inherit;
++}
++
+ .console-main {
+   padding: 48px;
+   max-width: 1100px;

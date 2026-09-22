@@ -7,13 +7,12 @@ import MyProducts from "./MyProducts";
 import Signup from "./Signup";
 import Login from "./Login";
 import EntryGate from "./EntryGate";
+import SiteHeader from "./SiteHeader";
 import { useAuth } from "./AuthContext";
 
 function Home() {
   const { token } = useAuth();
-  const [entered, setEntered] = useState(
-    () => sessionStorage.getItem("entered") === "true",
-  );
+  const [entered, setEntered] = useState(() => sessionStorage.getItem("entered") === "true");
 
   function handleGuestContinue() {
     sessionStorage.setItem("entered", "true");
@@ -22,30 +21,11 @@ function Home() {
 
   return (
     <div>
-      <header className="console-header">
-        <h1>QuickLaunch</h1>
-        {token ? (
-          <a
-            href="/dashboard"
-            className="btn-primary"
-            style={{ textDecoration: "none" }}
-          >
-            My Products
-          </a>
-        ) : (
-          <a href="/login" style={{ color: "inherit" }}>
-            Log in
-          </a>
-        )}
-      </header>
+      <SiteHeader />
       <main className="console-main">
         <div className="hero">
           <h2>Turn your idea into a waitlist page in minutes.</h2>
-          <p>
-            Describe what you're building — QuickLaunch generates a name,
-            tagline, and feature list, then creates a shareable page where
-            people can sign up to hear when you launch.
-          </p>
+          <p>Describe what you're building — QuickLaunch generates a name, tagline, and feature list, then creates a shareable page where people can sign up to hear when you launch.</p>
         </div>
         <ProductForm />
       </main>

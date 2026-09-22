@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "./AuthContext";
 import { useNavigate } from "react-router-dom";
+import SiteHeader from "./SiteHeader";
 
 function MyProducts() {
   const { token, user, logout } = useAuth();
@@ -63,7 +64,7 @@ function MyProducts() {
 
   return (
     <div>
-      <header className="dashboard-header"><h1>My Products</h1></header>
+      <SiteHeader title="My Products" />
       <main className="dashboard-main">
         <p className="dashboard-count">
           Logged in as <span className="mono">{user?.email}</span> —{" "}

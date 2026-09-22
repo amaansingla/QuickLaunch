@@ -5,6 +5,7 @@ function PublicPage() {
   const { slug } = useParams();
   const [product, setProduct] = useState(null);
   const [error, setError] = useState(null);
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [signedUp, setSignedUp] = useState(false);
 
@@ -28,7 +29,7 @@ function PublicPage() {
       const res = await fetch(`${import.meta.env.VITE_API_URL}/api/products/${slug}/signups`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ name, email }),
       });
       if (!res.ok) throw new Error('Signup failed');
       setSignedUp(true);
@@ -61,6 +62,13 @@ function PublicPage() {
           <p className="public-success">You're on the list!</p>
         ) : (
           <form className="public-signup" onSubmit={handleSignup}>
+            <input
+              type="text"
+              required
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Your name"
+            />
             <input
               type="email"
               required

@@ -73,72 +73,36 @@ function ProductForm() {
         <div className="generate-box">
           <label>Have an idea? Let AI fill in the rest</label>
           <div className="generate-row">
-            <input
-              type="text"
-              value={idea}
-              onChange={(e) => setIdea(e.target.value)}
-              placeholder="e.g. an app for tracking gym progress"
-            />
-            <button
-              type="button"
-              className="btn-generate"
-              onClick={handleGenerate}
-              disabled={generating}
-            >
+            <input type="text" value={idea} onChange={(e) => setIdea(e.target.value)} placeholder="e.g. an app for tracking gym progress" />
+            <button type="button" className="btn-generate" onClick={handleGenerate} disabled={generating}>
               {generating ? "Generating..." : name ? "Regenerate" : "Generate"}
             </button>
           </div>
-          {generateError ? (
-            <p className="generate-error">{generateError}</p>
-          ) : null}
+          {generateError ? <p className="generate-error">{generateError}</p> : null}
         </div>
 
         <form onSubmit={handleSubmit}>
           <div className="field">
             <label>Product name</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. QuickLaunch"
-            />
+            <input type="text" value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. QuickLaunch" />
           </div>
           <div className="field">
             <label>One-liner</label>
-            <input
-              type="text"
-              value={oneLiner}
-              onChange={(e) => setOneLiner(e.target.value)}
-              placeholder="e.g. Launch a waitlist page in 5 minutes"
-            />
+            <input type="text" value={oneLiner} onChange={(e) => setOneLiner(e.target.value)} placeholder="e.g. Launch a waitlist page in 5 minutes" />
           </div>
           <div className="field">
             <label>Feature 1</label>
-            <input
-              type="text"
-              value={bullet1}
-              onChange={(e) => setBullet1(e.target.value)}
-            />
+            <input type="text" value={bullet1} onChange={(e) => setBullet1(e.target.value)} />
           </div>
           <div className="field">
             <label>Feature 2</label>
-            <input
-              type="text"
-              value={bullet2}
-              onChange={(e) => setBullet2(e.target.value)}
-            />
+            <input type="text" value={bullet2} onChange={(e) => setBullet2(e.target.value)} />
           </div>
           <div className="field">
             <label>Feature 3</label>
-            <input
-              type="text"
-              value={bullet3}
-              onChange={(e) => setBullet3(e.target.value)}
-            />
+            <input type="text" value={bullet3} onChange={(e) => setBullet3(e.target.value)} />
           </div>
-          <button type="submit" className="btn-primary">
-            Create page
-          </button>
+          <button type="submit" className="btn-primary">Create page</button>
         </form>
 
         {error ? <p className="form-error">{error}</p> : null}
@@ -146,13 +110,7 @@ function ProductForm() {
         {result ? (
           <p className="form-success">
             Page created!{" "}
-            <a
-              href={"/p/" + result.slug}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              View your page →
-            </a>
+            <a href={"/p/" + result.slug} target="_blank" rel="noopener noreferrer">View your page →</a>
             {" · "}
             <a href={"/dashboard/" + result.slug}>Go to admin dashboard →</a>
           </p>
@@ -160,11 +118,7 @@ function ProductForm() {
       </div>
 
       <div className="editor-preview-panel">
-        <PagePreview
-          name={name}
-          oneLiner={oneLiner}
-          bullets={[bullet1, bullet2, bullet3]}
-        />
+        <PagePreview name={name} oneLiner={oneLiner} bullets={[bullet1, bullet2, bullet3]} />
       </div>
     </div>
   );
