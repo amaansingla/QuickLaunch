@@ -402,3 +402,70 @@ input, button {
   margin-top: 10px;
   font-size: 16px;
 }
+
+.form-success a {
+  color: var(--gold);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.form-success a:hover {
+  text-decoration: underline;
+}
+
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.auth-card {
+  max-width: 360px;
+  width: 100%;
+}
+
+.auth-card h2 {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.auth-switch {
+  margin-top: 16px;
+  text-align: center;
+  color: var(--ash);
+  font-size: 14px;
+}
+
+.auth-switch a {
+  color: var(--gold);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.gate-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 30, 59, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+.gate-card {
+  background: var(--paper);
+  padding: 40px;
+  border-radius: 6px;
+  max-width: 380px;
+  text-align: center;
+}
+.gate-card p {
+  color: var(--ash);
+  margin: 12px 0 24px;
+}
+.gate-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
