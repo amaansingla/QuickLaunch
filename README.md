@@ -12,24 +12,29 @@ QuickLaunch is a full-stack tool that turns a one-line product idea into a live,
 ## Preview
 
 **Entry gate — guest or account**
-![Entry gate](./screenshots/entry-gate.png)
+<img width="1508" height="824" alt="entry-gate" src="https://github.com/user-attachments/assets/282b2e7a-2b34-4a58-9045-289db640ffce" />
+
 
 **My Products — admin dashboard**
-![My Products](./screenshots/my-products-empty.png)
+<img width="1512" height="830" alt="my-products-empty" src="https://github.com/user-attachments/assets/c67c21be-7667-4062-8cb9-5221d828a331" />
+
 
 **AI-assisted editor with live preview**
-![Editor](./screenshots/ai-generate-editor.png)
+<img width="1512" height="827" alt="ai-generate-editor" src="https://github.com/user-attachments/assets/ab748ec8-1559-4dbb-a898-8e31bd24f5b2" />
+
 
 **Page created — links to the public page and admin dashboard**
-![Page created](./screenshots/page-created.png)
+<img width="1512" height="825" alt="page-created" src="https://github.com/user-attachments/assets/ae2686a2-7cd7-4c19-a670-cafd0372a131" />
 
 **Public waitlist page**
-![Public page](./screenshots/public-page.png)
-![Public page filled in](./screenshots/public-page-filled.png)
+<img width="1512" height="824" alt="public-page-filled" src="https://github.com/user-attachments/assets/ea4d7f65-66c5-43fe-8d4b-bad860ea723e" />
+<img width="1508" height="822" alt="public-page" src="https://github.com/user-attachments/assets/66c86f7a-07cd-4f2a-842c-ff29e53a4329" />
+
 
 **Signups dashboard with Excel export**
-![Signups dashboard](./screenshots/signups-dashboard.png)
-![Excel export](./screenshots/excel-export.png)
+<img width="1512" height="824" alt="signups-dashboard" src="https://github.com/user-attachments/assets/5f219748-38f8-41bf-8b69-b3ad20b12457" />
+<img width="1512" height="982" alt="excel-export" src="https://github.com/user-attachments/assets/459479a3-50c5-426f-9b52-d31ebd318733" />
+
 
 ## Features
 
