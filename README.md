@@ -10,17 +10,24 @@ Every founder validating a new idea needs a landing page with email capture. Exi
 
 ## Features
 
-- Simple editor: product name, one-liner, and 3 feature bullets
-- Live preview that updates as you type
+- **Guest or account mode:** an entry gate lets visitors either try it instantly as a guest, or sign up / log in for an account
+- **Accounts:** email + password signup and login (JWT-based), with a protected admin dashboard
+- AI-assisted editor: describe your idea and Groq generates a product name, one-liner, and 3 feature bullets — all editable, with a live preview
 - Auto-generated public landing page at a unique URL (`/p/your-product`)
-- Real email capture with duplicate prevention
-- Founder dashboard showing total signups and who signed up, with timestamps
+- Waitlist signups capture both name and email, with duplicate-email prevention per product
+- **My Products dashboard:** logged-in users see every product they've made, can jump into any one's signup list, or create a new one
+- Per-product signup dashboard showing total count, name/email/timestamp per signup, and a **one-click Excel (.xlsx) export**
+- Delete an individual product (with confirmation)
+- Delete your account (with confirmation) — wipes the account and every product it owns
+- Consistent navigation header (Home / My Products / Log in) on every page
 
 ## Tech stack
 
 - **Frontend:** React (Vite), React Router
-- **Backend:** Node.js, Express
+- **Backend:** Node.js, Express, JWT auth (jsonwebtoken + bcrypt)
+- **AI:** Groq (idea → name/one-liner/bullets generation)
 - **Database:** PostgreSQL (hosted on Railway)
+- **Excel export:** SheetJS (xlsx)
 - **Deployment:** Vercel (frontend), Railway (backend + database)
 
 ## Architecture
@@ -39,8 +46,8 @@ Browser → React frontend (Vercel)
 ```bash
 cd backend
 npm install
-# create a .env file with DATABASE_URL, PORT, NODE_ENV
-node run-schema.js   # sets up database tables (first time only)
+# create a .env file with DATABASE_URL, PORT, NODE_ENV, JWT_SECRET, GROQ_API_KEY
+node run-schema.js   # sets up / updates database tables (safe to re-run anytime)
 node server.js
 ```
 
@@ -54,12 +61,18 @@ npm run dev
 
 ## API routes
 
-| Method | Route | Description |
-|---|---|---|
-| POST | `/api/products` | Create a new product page |
-| GET | `/api/products/:slug` | Get a product by its URL slug |
-| POST | `/api/products/:slug/signups` | Add an email to a product's waitlist |
-| GET | `/api/products/:slug/signups` | Get signup count and list for a product |
+| Method | Route | Auth | Description |
+|---|---|---|---|
+| POST | `/api/auth/signup` | — | Create an account |
+| POST | `/api/auth/login` | — | Log in, returns a JWT |
+| DELETE | `/api/auth/account` | required | Delete the logged-in user's account and all their products |
+| POST | `/api/generate` | — | AI-generate a name/one-liner/bullets from a one-line idea (Groq) |
+| POST | `/api/products` | optional | Create a new product page (owned if logged in, ownerless if guest) |
+| GET | `/api/products/mine` | required | List all products owned by the logged-in user |
+| GET | `/api/products/:slug` | — | Get a product by its URL slug |
+| DELETE | `/api/products/:id` | required | Delete a product you own |
+| POST | `/api/products/:slug/signups` | — | Add a name + email to a product's waitlist |
+| GET | `/api/products/:slug/signups` | — | Get signup count and full list (name, email, timestamp) for a product |
 
 ## Author
 
