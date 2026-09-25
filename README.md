@@ -5,10 +5,7 @@ QuickLaunch is a full-stack tool that turns a one-line product idea into a live,
 **Live demo:** https://quick-launch-eight.vercel.app
 
 ## Demo
-
-<!-- Drop a screen recording here, e.g. demo.mp4, the same way VisaTrack does it -->
-`[demo video here]`
-
+https://github.com/user-attachments/assets/be2d58f4-a3ab-4e95-b82b-38846db2ce48
 ## Preview
 
 **Entry gate — guest or account**
