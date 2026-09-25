@@ -1,34 +1,55 @@
 # QuickLaunch
 
-A full-stack SaaS tool that lets founders create a landing page and waitlist for their product idea in under 5 minutes — no code required.
+QuickLaunch is a full-stack tool that turns a one-line product idea into a live, shareable waitlist landing page in minutes — with real accounts, an admin dashboard, and Excel export of everyone who signs up.
 
 **Live demo:** https://quick-launch-eight.vercel.app
 
-## The problem
+## Demo
 
-Every founder validating a new idea needs a landing page with email capture. Existing tools are either paid, overkill, or take too long to set up. QuickLaunch goes from idea to a live, shareable waitlist page in minutes.
+<!-- Drop a screen recording here, e.g. demo.mp4, the same way VisaTrack does it -->
+`[demo video here]`
+
+## Preview
+
+<!-- Drop screenshots here: the entry gate, the AI-generate editor, a public waitlist page, and the My Products / signups dashboard -->
+`[screenshot: entry gate — guest vs log in]`
+
+`[screenshot: editor with AI-generated idea + live preview]`
+
+`[screenshot: public waitlist page]`
+
+`[screenshot: My Products admin dashboard]`
+
+`[screenshot: per-product signups table + Excel export]`
 
 ## Features
 
-- **Guest or account mode:** an entry gate lets visitors either try it instantly as a guest, or sign up / log in for an account
-- **Accounts:** email + password signup and login (JWT-based), with a protected admin dashboard
-- AI-assisted editor: describe your idea and Groq generates a product name, one-liner, and 3 feature bullets — all editable, with a live preview
-- Auto-generated public landing page at a unique URL (`/p/your-product`)
-- Waitlist signups capture both name and email, with duplicate-email prevention per product
-- **My Products dashboard:** logged-in users see every product they've made, can jump into any one's signup list, or create a new one
-- Per-product signup dashboard showing total count, name/email/timestamp per signup, and a **one-click Excel (.xlsx) export**
-- Delete an individual product (with confirmation)
-- Delete your account (with confirmation) — wipes the account and every product it owns
-- Consistent navigation header (Home / My Products / Log in) on every page
+- 🚪 Entry gate — every visitor chooses guest mode or an account before landing on the builder
+- 🤖 AI-assisted editor — describe your idea in one line, Groq generates a product name, one-liner, and 3 feature bullets, all editable with a live preview
+- 🔗 Auto-generated public landing page at a unique URL (`/p/your-product`)
+- ✅ Waitlist signups capture name + email, with duplicate-email prevention per product
+- 🔐 Accounts — email/password signup and login, JWT-based auth
+- 📊 My Products dashboard — every product you've made in one place, with a button to create another
+- 📥 One-click Excel (.xlsx) export of a product's full signup list (name, email, timestamp)
+- 🗑️ Delete an individual product, with confirmation
+- ❌ Delete your account, with confirmation — wipes the account and every product it owns
+- 🧭 Consistent nav (Home / My Products / Log in) on every page
 
-## Tech stack
+## Why?
 
-- **Frontend:** React (Vite), React Router
-- **Backend:** Node.js, Express, JWT auth (jsonwebtoken + bcrypt)
-- **AI:** Groq (idea → name/one-liner/bullets generation)
-- **Database:** PostgreSQL (hosted on Railway)
-- **Excel export:** SheetJS (xlsx)
-- **Deployment:** Vercel (frontend), Railway (backend + database)
+Most no-code landing page builders are paid, overkill for validating a single idea, or take longer to set up than the idea takes to explain. QuickLaunch strips it down to the one thing a founder actually needs before writing any real code: a page people can find, understand in one glance, and sign up on — plus a way to see and export who did.
+
+## Tech Stack
+
+| Component | Technology |
+|---|---|
+| Frontend | React (Vite), React Router |
+| Backend | Node.js, Express |
+| Auth | JWT (jsonwebtoken) + bcrypt |
+| AI generation | Groq |
+| Database | PostgreSQL (Railway) |
+| Excel export | SheetJS (xlsx) |
+| Deployment | Vercel (frontend), Railway (backend + DB) |
 
 ## Architecture
 
@@ -40,26 +61,66 @@ Browser → React frontend (Vercel)
         PostgreSQL (Railway)
 ```
 
-## Running locally
+## Installation
 
-**Backend**
+Clone the repository.
+
+```bash
+git clone https://github.com/amaansingla/QuickLaunch.git
+cd QuickLaunch
+```
+
+Install backend dependencies.
+
 ```bash
 cd backend
 npm install
-# create a .env file with DATABASE_URL, PORT, NODE_ENV, JWT_SECRET, GROQ_API_KEY
-node run-schema.js   # sets up / updates database tables (safe to re-run anytime)
+```
+
+Set up the backend environment. Create `backend/.env`:
+
+```
+DATABASE_URL=your_postgres_connection_string
+PORT=4000
+NODE_ENV=development
+JWT_SECRET=your_random_secret
+GROQ_API_KEY=your_groq_api_key
+```
+
+Create the database tables (safe to re-run anytime — only adds what's missing).
+
+```bash
+node run-schema.js
+```
+
+Start the backend.
+
+```bash
 node server.js
 ```
 
-**Frontend**
+Install frontend dependencies.
+
 ```bash
-cd frontend
+cd ../frontend
 npm install
-# create a .env file with VITE_API_URL=http://localhost:4000
+```
+
+Set up the frontend environment. Create `frontend/.env`:
+
+```
+VITE_API_URL=http://localhost:4000
+```
+
+Start the frontend.
+
+```bash
 npm run dev
 ```
 
-## API routes
+You're ready to go — open the URL Vite prints (usually `http://localhost:5173`).
+
+## API Routes
 
 | Method | Route | Auth | Description |
 |---|---|---|---|
@@ -73,6 +134,43 @@ npm run dev
 | DELETE | `/api/products/:id` | required | Delete a product you own |
 | POST | `/api/products/:slug/signups` | — | Add a name + email to a product's waitlist |
 | GET | `/api/products/:slug/signups` | — | Get signup count and full list (name, email, timestamp) for a product |
+
+## Project Structure
+
+```
+QuickLaunch/
+├── backend/
+│   ├── server.js          # Express app entry point
+│   ├── db.js               # Postgres connection pool
+│   ├── schema.sql          # Table definitions + migrations
+│   ├── run-schema.js       # Applies schema.sql
+│   ├── authMiddleware.js   # requireAuth — blocks unauthenticated requests
+│   ├── optionalAuth.js     # optionalAuth — attaches user if logged in, allows guests
+│   └── routes/
+│       ├── auth.js         # signup / login / delete account
+│       ├── products.js     # create / list / delete products, signups, Excel data
+│       └── generate.js     # Groq AI idea → name/one-liner/bullets
+└── frontend/
+    └── src/
+        ├── App.jsx          # Routes + homepage
+        ├── AuthContext.jsx  # Auth state (token, user) shared across the app
+        ├── EntryGate.jsx    # Guest vs log in popup
+        ├── SiteHeader.jsx   # Shared nav header
+        ├── ProductForm.jsx  # AI-assist + manual editor
+        ├── PagePreview.jsx  # Live preview panel
+        ├── PublicPage.jsx   # Public /p/:slug waitlist page
+        ├── MyProducts.jsx   # Admin dashboard — list of owned products
+        ├── Dashboard.jsx    # Per-product signups table + Excel export
+        ├── Signup.jsx       # Account creation form
+        └── Login.jsx        # Login form
+```
+
+## Roadmap
+
+- Ephemeral guest pages (auto-delete on tab close, rather than persisting ownerless)
+- Custom domains per waitlist page
+- Email notifications to the founder on new signups
+- Analytics on page views vs. conversion rate
 
 ## Author
 
