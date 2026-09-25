@@ -11,16 +11,25 @@ QuickLaunch is a full-stack tool that turns a one-line product idea into a live,
 
 ## Preview
 
-<!-- Drop screenshots here: the entry gate, the AI-generate editor, a public waitlist page, and the My Products / signups dashboard -->
-`[screenshot: entry gate — guest vs log in]`
+**Entry gate — guest or account**
+![Entry gate](./screenshots/entry-gate.png)
 
-`[screenshot: editor with AI-generated idea + live preview]`
+**My Products — admin dashboard**
+![My Products](./screenshots/my-products-empty.png)
 
-`[screenshot: public waitlist page]`
+**AI-assisted editor with live preview**
+![Editor](./screenshots/ai-generate-editor.png)
 
-`[screenshot: My Products admin dashboard]`
+**Page created — links to the public page and admin dashboard**
+![Page created](./screenshots/page-created.png)
 
-`[screenshot: per-product signups table + Excel export]`
+**Public waitlist page**
+![Public page](./screenshots/public-page.png)
+![Public page filled in](./screenshots/public-page-filled.png)
+
+**Signups dashboard with Excel export**
+![Signups dashboard](./screenshots/signups-dashboard.png)
+![Excel export](./screenshots/excel-export.png)
 
 ## Features
 
